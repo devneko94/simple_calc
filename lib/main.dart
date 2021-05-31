@@ -1,55 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:simple_calc/define.dart';
+import 'models.dart';
+import 'ui.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-
+        home: ChangeNotifierProvider<ResultModel>(
+      create: (context) => ResultModel(),
+      child: Scaffold(
+        backgroundColor: Colors.black54,
+        appBar: AppBar(
+          backgroundColor: Colors.black54,
+          brightness: Brightness.dark,
+        ),
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              children: [
+                TextFiled(),
+                SizedBox(height: 20),
+                Keyboard(),
+              ],
+            ),
+          ),
+        ),
       ),
-    )
-  }
-}
-
-class ResultTextBox extends StatefulWidget {
-  @override
-  _ResultTextBox createState() => _ResultTextBox();
-}
-
-class _ResultTextBox extends State<ResultTextBox> {
-  String showText = '';
-  num calcResult = 0;
-
-  String doCalc(String _showText, num _calcResult) {
-    // TODO: 計算処理
-    return 'test';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(showText);
-  }
-}
-
-class NumButton extends StatelessWidget {
-  NumButton(Key key, {required this.name}) : super(key: key);
-  final String name;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
+    ));
   }
 }
