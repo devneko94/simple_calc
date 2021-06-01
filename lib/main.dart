@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:simple_calc/define.dart';
 import 'models.dart';
 import 'ui.dart';
 

@@ -10,36 +10,28 @@ class NumButton extends StatelessWidget {
   NumButton(this._name);
   final String _name;
 
-  String formatText(String oldText, String inputChar) {
-    double _inputNum = double.tryParse(oldText + inputChar) ?? 0;
-    double _dif = _inputNum - (_inputNum ~/ 1);
-    if (_dif == 0) {
-      return (_inputNum ~/ 1).toString();
-    } else {
-      return _inputNum.toString();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     ResultModel _model = Provider.of<ResultModel>(context);
-    String _inputText = formatText(_model.showText, this._name);
 
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: ElevatedButton(
-          child: Text(
-            this._name,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 32,
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: Text(
+              this._name,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 42,
+              ),
             ),
           ),
           style: ElevatedButton.styleFrom(
             primary: Colors.orange,
           ),
-          onPressed: () => _model.inputText(_inputText),
+          onPressed: () => _model.inputText(this._name),
         ),
       ),
     );
@@ -98,11 +90,14 @@ class ClearButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: ElevatedButton(
-          child: Text(
-            _model.isCleared ? 'AC' : 'C',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 32,
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: Text(
+              _model.isCleared ? 'AC' : 'C',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 42,
+              ),
             ),
           ),
           style: ElevatedButton.styleFrom(
@@ -128,11 +123,14 @@ class TempButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: ElevatedButton(
-          child: Text(
-            this._name,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 32,
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: Text(
+              this._name,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 42,
+              ),
             ),
           ),
           style: ElevatedButton.styleFrom(
@@ -150,20 +148,36 @@ class TextFiled extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResultModel _model = Provider.of<ResultModel>(context);
-    return SizedBox(
-      height: 150,
-      child: Container(
-        color: Color(0xFF777777),
-        padding: EdgeInsets.all(8.0),
-        alignment: Alignment.bottomRight,
-        child: Text(
-          _model.showText,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 48,
+    return Column(
+      children: [
+        Container(
+          color: Color(0xFF777777),
+          padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+          alignment: Alignment.topRight,
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: _model.modeIcon,
           ),
         ),
-      ),
+        SizedBox(
+          height: 150,
+          child: Container(
+            color: Color(0xFF777777),
+            padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+            alignment: Alignment.bottomRight,
+            child: FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                _model.showText,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 78,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -173,11 +187,11 @@ class Keyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-          child: Row(
+      child: Row(
         children: [
           Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ClearButton(),
                 NumButton('7'),
@@ -189,6 +203,7 @@ class Keyboard extends StatelessWidget {
           ),
           Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TempButton('M+'),
                 NumButton('8'),
@@ -200,6 +215,7 @@ class Keyboard extends StatelessWidget {
           ),
           Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TempButton('M-'),
                 NumButton('9'),
@@ -211,6 +227,7 @@ class Keyboard extends StatelessWidget {
           ),
           Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ModeButton(
                     CalcMode.Divide,
@@ -246,7 +263,7 @@ class Keyboard extends StatelessWidget {
             ),
           ),
         ],
-      )),
+      ),
     );
   }
 }
