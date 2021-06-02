@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'define.dart';
 
 class ResultModel extends ChangeNotifier {
   String showText = '0';
-  double calcResult = 0;
+  double calcResult = 0.0;
   CalcMode calcMode = CalcMode.None;
   FaIcon? modeIcon;
+  bool isAfterModeChanged = false;
   bool isCleared = true;
 
   void inputShowText(String newChar) {
     this.showText = _formatInputText(showText, newChar);
     this.isCleared = false;
+    this.isAfterModeChanged = false;
     notifyListeners();
   }
 
-  void showResult(num result) {
+  void showResult(double result) {
     this.showText = _formatResult(result.toString());
+    this.isCleared = true;
     notifyListeners();
   }
 
@@ -29,55 +31,60 @@ class ResultModel extends ChangeNotifier {
           FontAwesomeIcons.square,
           color: Color(0xFF777777),
         );
+        this.isAfterModeChanged = true;
         break;
       case CalcMode.Add:
         modeIcon = FaIcon(
           FontAwesomeIcons.plus,
           color: Colors.white,
         );
+        this.isAfterModeChanged = true;
         break;
       case CalcMode.Sub:
         modeIcon = FaIcon(
           FontAwesomeIcons.minus,
           color: Colors.white,
         );
+        this.isAfterModeChanged = true;
         break;
       case CalcMode.Times:
         modeIcon = FaIcon(
           FontAwesomeIcons.times,
           color: Colors.white,
         );
+        this.isAfterModeChanged = true;
         break;
       case CalcMode.Divide:
         modeIcon = FaIcon(
           FontAwesomeIcons.divide,
           color: Colors.white,
         );
+        this.isAfterModeChanged = true;
         break;
     }
-
     notifyListeners();
   }
 
-  void doCalc(num newValue) {
+  void doCalc(double newValue) {
     switch (calcMode) {
       case CalcMode.None:
+        this.calcResult = newValue;
         break;
       case CalcMode.Add:
         this.calcResult += newValue;
-        showResult(newValue);
+        showResult(this.calcResult);
         break;
       case CalcMode.Sub:
         this.calcResult -= newValue;
-        showResult(newValue);
+        showResult(this.calcResult);
         break;
       case CalcMode.Times:
         this.calcResult *= newValue;
-        showResult(newValue);
+        showResult(this.calcResult);
         break;
       case CalcMode.Divide:
         this.calcResult /= newValue;
-        showResult(newValue);
+        showResult(this.calcResult);
         break;
     }
     notifyListeners();
@@ -97,7 +104,15 @@ class ResultModel extends ChangeNotifier {
   }
 
   String _formatResult(String result) {
-    return _formatInputText(result, '');
+    String _result = _formatInputText(result, '');
+
+    // 小数点以下が0のみの場合、整数に整形
+    if (_result.indexOf('.') > -1 &&
+        int.parse(_result.substring(_result.indexOf('.') + 1)) == 0) {
+      _result = _result.substring(0, _result.indexOf('.'));
+    }
+
+    return _result;
   }
 
   String _formatInputText(String oldText, String inputNum) {
@@ -140,8 +155,7 @@ class ResultModel extends ChangeNotifier {
     }
 
     // 3桁区切りのカンマを挿入
-    final formatter = NumberFormat("#,###.0");
-    _result = formatter.format(_result);
+    // TODO: カンマ区切り処理
     return _result;
   }
 }

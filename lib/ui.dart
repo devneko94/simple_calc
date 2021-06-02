@@ -31,7 +31,13 @@ class NumButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             primary: Colors.orange,
           ),
-          onPressed: () => _model.inputShowText(this._name),
+          onPressed: () {
+            if (_model.isAfterModeChanged) {
+              _model.clear();
+              _model.isAfterModeChanged = false;
+            }
+            _model.inputShowText(this._name);
+          },
         ),
       ),
     );
@@ -58,6 +64,10 @@ class ModeButton extends StatelessWidget {
           ),
           onPressed: () {
             switch (this._mode) {
+              case CalcMode.None:
+                _model.doCalc(double.parse(_model.showText));
+                _model.changeMode(CalcMode.None);
+                break;
               case CalcMode.Add:
                 _model.doCalc(double.parse(_model.showText));
                 _model.changeMode(CalcMode.Add);
@@ -73,8 +83,6 @@ class ModeButton extends StatelessWidget {
               case CalcMode.Divide:
                 _model.doCalc(double.parse(_model.showText));
                 _model.changeMode(CalcMode.Divide);
-                break;
-              default:
                 break;
             }
           },
@@ -100,7 +108,7 @@ class ClearButton extends StatelessWidget {
               _model.isCleared ? 'AC' : 'C',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 42,
+                fontSize: 36,
               ),
             ),
           ),
@@ -133,7 +141,7 @@ class TempButton extends StatelessWidget {
               this._name,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 42,
+                fontSize: 36,
               ),
             ),
           ),
@@ -194,83 +202,59 @@ class Keyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ClearButton(),
-                NumButton('7'),
-                NumButton('4'),
-                NumButton('1'),
-                NumButton('00'),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TempButton('M+'),
-                NumButton('8'),
-                NumButton('5'),
-                NumButton('2'),
-                NumButton('0'),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TempButton('M-'),
-                NumButton('9'),
-                NumButton('6'),
-                NumButton('3'),
-                NumButton('.'),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ModeButton(
-                    CalcMode.Divide,
-                    FaIcon(
-                      FontAwesomeIcons.divide,
-                      color: Colors.white,
-                    )),
-                ModeButton(
-                    CalcMode.Times,
-                    FaIcon(
-                      FontAwesomeIcons.times,
-                      color: Colors.white,
-                    )),
-                ModeButton(
-                    CalcMode.Sub,
-                    FaIcon(
-                      FontAwesomeIcons.minus,
-                      color: Colors.white,
-                    )),
-                ModeButton(
-                    CalcMode.Add,
-                    FaIcon(
-                      FontAwesomeIcons.plus,
-                      color: Colors.white,
-                    )),
-                ModeButton(
-                    CalcMode.None,
-                    FaIcon(
-                      FontAwesomeIcons.equals,
-                      color: Colors.white,
-                    )),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+        child: GridView.count(
+      physics: NeverScrollableScrollPhysics(),
+      crossAxisCount: 4,
+      // childAspectRatio: 0.85,
+      mainAxisSpacing: 1.0,
+      crossAxisSpacing: 1.0,
+      children: [
+        ClearButton(),
+        TempButton('M+'),
+        TempButton('M-'),
+        ModeButton(
+            CalcMode.Divide,
+            FaIcon(
+              FontAwesomeIcons.divide,
+              color: Colors.white,
+            )),
+        NumButton('7'),
+        NumButton('8'),
+        NumButton('9'),
+        ModeButton(
+            CalcMode.Times,
+            FaIcon(
+              FontAwesomeIcons.times,
+              color: Colors.white,
+            )),
+        NumButton('4'),
+        NumButton('5'),
+        NumButton('6'),
+        ModeButton(
+            CalcMode.Sub,
+            FaIcon(
+              FontAwesomeIcons.minus,
+              color: Colors.white,
+            )),
+        NumButton('1'),
+        NumButton('2'),
+        NumButton('3'),
+        ModeButton(
+            CalcMode.Add,
+            FaIcon(
+              FontAwesomeIcons.plus,
+              color: Colors.white,
+            )),
+        NumButton('00'),
+        NumButton('0'),
+        NumButton('.'),
+        ModeButton(
+            CalcMode.None,
+            FaIcon(
+              FontAwesomeIcons.equals,
+              color: Colors.white,
+            )),
+      ],
+    ));
   }
 }
