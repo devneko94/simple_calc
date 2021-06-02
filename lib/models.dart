@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'define.dart';
 
 class ResultModel extends ChangeNotifier {
@@ -9,8 +10,14 @@ class ResultModel extends ChangeNotifier {
   FaIcon? modeIcon;
   bool isCleared = true;
 
-  void inputText(String newChar) {
-    this.showText = _formatText(showText, newChar);
+  void inputShowText(String newChar) {
+    this.showText = _formatInputText(showText, newChar);
+    this.isCleared = false;
+    notifyListeners();
+  }
+
+  void showResult(num result) {
+    this.showText = _formatResult(result.toString());
     notifyListeners();
   }
 
@@ -18,7 +25,10 @@ class ResultModel extends ChangeNotifier {
     this.calcMode = newMode;
     switch (calcMode) {
       case CalcMode.None:
-        modeIcon = null;
+        modeIcon = FaIcon(
+          FontAwesomeIcons.square,
+          color: Color(0xFF777777),
+        );
         break;
       case CalcMode.Add:
         modeIcon = FaIcon(
@@ -55,15 +65,19 @@ class ResultModel extends ChangeNotifier {
         break;
       case CalcMode.Add:
         this.calcResult += newValue;
+        showResult(newValue);
         break;
       case CalcMode.Sub:
         this.calcResult -= newValue;
+        showResult(newValue);
         break;
       case CalcMode.Times:
         this.calcResult *= newValue;
+        showResult(newValue);
         break;
       case CalcMode.Divide:
         this.calcResult /= newValue;
+        showResult(newValue);
         break;
     }
     notifyListeners();
@@ -71,47 +85,63 @@ class ResultModel extends ChangeNotifier {
 
   void clear() {
     this.showText = '0';
+    this.isCleared = true;
     notifyListeners();
   }
 
   void allClear() {
     this.showText = '0';
     this.calcResult = 0;
-    this.calcMode = CalcMode.None;
+    changeMode(CalcMode.None);
     notifyListeners();
   }
 
-  String _formatText(String oldText, String inputNum) {
-    String result = oldText + inputNum;
-    bool isFormatted = false;
+  String _formatResult(String result) {
+    return _formatInputText(result, '');
+  }
 
-    while (!isFormatted) {
-      isFormatted = true;
+  String _formatInputText(String oldText, String inputNum) {
+    String _result = oldText + inputNum;
+    bool _isFormatted = false;
 
-      if (result.startsWith('0') && !result.startsWith('0.')) {
-        result = result.substring(1);
-        isFormatted = false;
+    while (!_isFormatted) {
+      _isFormatted = true;
+
+      // 0始まりの自然数の場合は０を削除
+      if (_result.startsWith('0') &&
+          !_result.startsWith('0.') &&
+          _result.length > 1) {
+        _result = _result.substring(1);
+        _isFormatted = false;
       }
 
-      if (result.startsWith('00.')) {
-        result = result.substring(1);
-        isFormatted = false;
+      // "00."と0が2つある場合は1つ削除
+      if (_result.startsWith('00.')) {
+        _result = _result.substring(1);
+        _isFormatted = false;
       }
 
-      if (result.length - result.replaceAll('.', '').length > 1) {
-        int idx = result.indexOf('.');
+      // 2つ目小数点が入力された場合は削除
+      if (_result.length - _result.replaceAll('.', '').length > 1) {
+        int idx = _result.indexOf('.');
 
         while (idx > -1) {
-          result = result.replaceFirst('.', '', idx + 1);
-          idx = result.indexOf('.', idx + 1);
+          _result = _result.replaceFirst('.', '', idx + 1);
+          idx = _result.indexOf('.', idx + 1);
         }
-        isFormatted = false;
+        _isFormatted = false;
       }
 
-      if (result.length > 18) {
-        result = oldText;
+      // 最長18桁に制限
+      if (_result.length > 18) {
+        _result = oldText;
+        _isFormatted = false;
       }
     }
-    return result;
+
+    // 3桁区切りのカンマを挿入
+    final formatter = NumberFormat("#,###.0");
+    _result = formatter.format(_result);
+    return _result;
   }
 }

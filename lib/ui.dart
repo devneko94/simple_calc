@@ -31,7 +31,7 @@ class NumButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             primary: Colors.orange,
           ),
-          onPressed: () => _model.inputText(this._name),
+          onPressed: () => _model.inputShowText(this._name),
         ),
       ),
     );
@@ -59,15 +59,19 @@ class ModeButton extends StatelessWidget {
           onPressed: () {
             switch (this._mode) {
               case CalcMode.Add:
+                _model.doCalc(double.parse(_model.showText));
                 _model.changeMode(CalcMode.Add);
                 break;
               case CalcMode.Sub:
+                _model.doCalc(double.parse(_model.showText));
                 _model.changeMode(CalcMode.Sub);
                 break;
               case CalcMode.Times:
+                _model.doCalc(double.parse(_model.showText));
                 _model.changeMode(CalcMode.Times);
                 break;
               case CalcMode.Divide:
+                _model.doCalc(double.parse(_model.showText));
                 _model.changeMode(CalcMode.Divide);
                 break;
               default:
@@ -150,17 +154,20 @@ class TextFiled extends StatelessWidget {
     ResultModel _model = Provider.of<ResultModel>(context);
     return Column(
       children: [
-        Container(
-          color: Color(0xFF777777),
-          padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-          alignment: Alignment.topRight,
-          child: FittedBox(
-            fit: BoxFit.fitWidth,
-            child: _model.modeIcon,
+        SizedBox(
+          height: 30,
+          child: Container(
+            color: Color(0xFF777777),
+            padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+            alignment: Alignment.topRight,
+            child: FittedBox(
+              fit: BoxFit.fitHeight,
+              child: _model.modeIcon,
+            ),
           ),
         ),
         SizedBox(
-          height: 150,
+          height: 120,
           child: Container(
             color: Color(0xFF777777),
             padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
