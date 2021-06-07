@@ -165,7 +165,7 @@ class TextFiled extends StatelessWidget {
         SizedBox(
           height: 30,
           child: Container(
-            color: Color(0xFF777777),
+            color: Colors.black54,
             padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
             alignment: Alignment.topRight,
             child: FittedBox(
@@ -177,7 +177,7 @@ class TextFiled extends StatelessWidget {
         SizedBox(
           height: 120,
           child: Container(
-            color: Color(0xFF777777),
+            color: Colors.black54,
             padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
             alignment: Alignment.bottomRight,
             child: FittedBox(

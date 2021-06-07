@@ -27,10 +27,7 @@ class ResultModel extends ChangeNotifier {
     this.calcMode = newMode;
     switch (calcMode) {
       case CalcMode.None:
-        modeIcon = FaIcon(
-          FontAwesomeIcons.square,
-          color: Color(0xFF777777),
-        );
+        modeIcon = null;
         this.isAfterModeChanged = true;
         break;
       case CalcMode.Add:
