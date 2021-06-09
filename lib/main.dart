@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
             child: Column(
               children: [
                 TextFiled(),
-                SizedBox(height: 20),
                 Keyboard(),
               ],
             ),

@@ -201,13 +201,17 @@ class TextFiled extends StatelessWidget {
 class Keyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final Size _size = MediaQuery.of(context).size;
+    final double _itemHeight = (_size.height - kToolbarHeight - 24) / 5;
+    final double _itemWidth = _size.width / 3;
+
     return Expanded(
         child: GridView.count(
       physics: NeverScrollableScrollPhysics(),
       crossAxisCount: 4,
-      // childAspectRatio: 0.85,
       mainAxisSpacing: 1.0,
       crossAxisSpacing: 1.0,
+      childAspectRatio: _itemWidth / _itemHeight,
       children: [
         ClearButton(),
         TempButton('M+'),
