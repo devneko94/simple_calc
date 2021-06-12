@@ -12,31 +12,33 @@ class NumButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResultModel _model = Provider.of<ResultModel>(context);
-
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(4.0),
-        child: ElevatedButton(
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: Text(
-              this._name,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 42,
+        child: Consumer<ResultModel>(
+          builder: (_ctx, _model, _child) {
+            return ElevatedButton(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: Text(
+                  this._name,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 42,
+                  ),
+                ),
               ),
-            ),
-          ),
-          style: ElevatedButton.styleFrom(
-            primary: Colors.orange,
-          ),
-          onPressed: () {
-            if (_model.isAfterModeChanged) {
-              _model.clear();
-              _model.isAfterModeChanged = false;
-            }
-            _model.inputShowText(this._name);
+              style: ElevatedButton.styleFrom(
+                primary: Colors.orange,
+              ),
+              onPressed: () {
+                if (_model.isAfterModeChanged) {
+                  _model.clear();
+                  _model.isAfterModeChanged = false;
+                }
+                _model.inputShowText(this._name);
+              },
+            );
           },
         ),
       ),
@@ -52,39 +54,44 @@ class ModeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResultModel _model = Provider.of<ResultModel>(context, listen: false);
-
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(4.0),
-        child: ElevatedButton(
-          child: _icon,
-          style: ElevatedButton.styleFrom(
-            primary: Colors.orange,
-          ),
-          onPressed: () {
-            switch (this._mode) {
-              case CalcMode.None:
-                _model.doCalc(double.parse(_model.showText));
-                _model.changeMode(CalcMode.None);
-                break;
-              case CalcMode.Add:
-                _model.doCalc(double.parse(_model.showText));
-                _model.changeMode(CalcMode.Add);
-                break;
-              case CalcMode.Sub:
-                _model.doCalc(double.parse(_model.showText));
-                _model.changeMode(CalcMode.Sub);
-                break;
-              case CalcMode.Times:
-                _model.doCalc(double.parse(_model.showText));
-                _model.changeMode(CalcMode.Times);
-                break;
-              case CalcMode.Divide:
-                _model.doCalc(double.parse(_model.showText));
-                _model.changeMode(CalcMode.Divide);
-                break;
-            }
+        child: Consumer<ResultModel>(
+          builder: (_ctx, _model, _child) {
+            return ElevatedButton(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: _icon,
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.orange,
+              ),
+              onPressed: () {
+                switch (this._mode) {
+                  case CalcMode.None:
+                    _model.doCalc(double.parse(_model.showText));
+                    _model.changeMode(CalcMode.None);
+                    break;
+                  case CalcMode.Add:
+                    _model.doCalc(double.parse(_model.showText));
+                    _model.changeMode(CalcMode.Add);
+                    break;
+                  case CalcMode.Sub:
+                    _model.doCalc(double.parse(_model.showText));
+                    _model.changeMode(CalcMode.Sub);
+                    break;
+                  case CalcMode.Times:
+                    _model.doCalc(double.parse(_model.showText));
+                    _model.changeMode(CalcMode.Times);
+                    break;
+                  case CalcMode.Divide:
+                    _model.doCalc(double.parse(_model.showText));
+                    _model.changeMode(CalcMode.Divide);
+                    break;
+                }
+              },
+            );
           },
         ),
       ),
@@ -96,27 +103,29 @@ class ModeButton extends StatelessWidget {
 class ClearButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ResultModel _model = Provider.of<ResultModel>(context);
-
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(4.0),
-        child: ElevatedButton(
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: Text(
-              _model.isCleared ? 'AC' : 'C',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 36,
+        child: Consumer<ResultModel>(
+          builder: (_ctx, _model, _child) {
+            return ElevatedButton(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: Text(
+                  _model.isCleared ? 'AC' : 'C',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 36,
+                  ),
+                ),
               ),
-            ),
-          ),
-          style: ElevatedButton.styleFrom(
-            primary: Colors.orange,
-          ),
-          onPressed: () {
-            _model.isCleared ? _model.allClear() : _model.clear();
+              style: ElevatedButton.styleFrom(
+                primary: Colors.orange,
+              ),
+              onPressed: () {
+                _model.isCleared ? _model.allClear() : _model.clear();
+              },
+            );
           },
         ),
       ),
@@ -156,38 +165,45 @@ class TempButton extends StatelessWidget {
 }
 
 // テキスト領域
-class TextFiled extends StatelessWidget {
+class TextArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ResultModel _model = Provider.of<ResultModel>(context);
     return Column(
       children: [
         SizedBox(
           height: 30,
           child: Container(
-            color: Colors.black54,
+            color: Colors.transparent,
             padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
             alignment: Alignment.topRight,
-            child: FittedBox(
-              fit: BoxFit.fitHeight,
-              child: _model.modeIcon,
+            child: Consumer<ResultModel>(
+              builder: (_ctx, _model, _child) {
+                return FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child: _model.modeIcon,
+                );
+              },
             ),
           ),
         ),
         SizedBox(
           height: 120,
           child: Container(
-            color: Colors.black54,
+            color: Colors.transparent,
             padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
             alignment: Alignment.bottomRight,
             child: FittedBox(
               fit: BoxFit.fitWidth,
-              child: Text(
-                _model.showText,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 78,
-                ),
+              child: Consumer<ResultModel>(
+                builder: (_ctx, _model, _child) {
+                  return Text(
+                    _model.showText,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 78,
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -202,63 +218,69 @@ class Keyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
-    final double _itemHeight = (_size.height - kToolbarHeight - 24) / 5;
-    final double _itemWidth = _size.width / 3;
+    final double _itemHeight = (_size.height - kToolbarHeight - 240) / 5;
+    final double _itemWidth = _size.width / 4;
 
     return Expanded(
-        child: GridView.count(
-      physics: NeverScrollableScrollPhysics(),
-      crossAxisCount: 4,
-      mainAxisSpacing: 1.0,
-      crossAxisSpacing: 1.0,
-      childAspectRatio: _itemWidth / _itemHeight,
-      children: [
-        ClearButton(),
-        TempButton('M+'),
-        TempButton('M-'),
-        ModeButton(
+      child: GridView.count(
+        physics: NeverScrollableScrollPhysics(),
+        crossAxisCount: 4,
+        mainAxisSpacing: 1.0,
+        crossAxisSpacing: 1.0,
+        childAspectRatio: _itemWidth / _itemHeight,
+        children: [
+          ClearButton(),
+          TempButton('M+'),
+          TempButton('M-'),
+          ModeButton(
             CalcMode.Divide,
             FaIcon(
               FontAwesomeIcons.divide,
               color: Colors.white,
-            )),
-        NumButton('7'),
-        NumButton('8'),
-        NumButton('9'),
-        ModeButton(
+            ),
+          ),
+          NumButton('7'),
+          NumButton('8'),
+          NumButton('9'),
+          ModeButton(
             CalcMode.Times,
             FaIcon(
               FontAwesomeIcons.times,
               color: Colors.white,
-            )),
-        NumButton('4'),
-        NumButton('5'),
-        NumButton('6'),
-        ModeButton(
+            ),
+          ),
+          NumButton('4'),
+          NumButton('5'),
+          NumButton('6'),
+          ModeButton(
             CalcMode.Sub,
             FaIcon(
               FontAwesomeIcons.minus,
               color: Colors.white,
-            )),
-        NumButton('1'),
-        NumButton('2'),
-        NumButton('3'),
-        ModeButton(
+            ),
+          ),
+          NumButton('1'),
+          NumButton('2'),
+          NumButton('3'),
+          ModeButton(
             CalcMode.Add,
             FaIcon(
               FontAwesomeIcons.plus,
               color: Colors.white,
-            )),
-        NumButton('00'),
-        NumButton('0'),
-        NumButton('.'),
-        ModeButton(
+            ),
+          ),
+          NumButton('00'),
+          NumButton('0'),
+          NumButton('.'),
+          ModeButton(
             CalcMode.None,
             FaIcon(
               FontAwesomeIcons.equals,
               color: Colors.white,
-            )),
-      ],
-    ));
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
